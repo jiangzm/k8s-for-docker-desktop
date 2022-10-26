@@ -1,3 +1,11 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    app.kubernetes.io/instance: kube-devops
+    app.kubernetes.io/name: kube-devops
+  name: kube-devops
+---
 kind: Deployment
 apiVersion: apps/v1
 metadata:
@@ -21,6 +29,10 @@ spec:
         name: echoserver
         ports:
         - containerPort: 8080
+        resources:
+          requests:
+            cpu: 100m
+            memory: 200Mi
         env:
           - name: NODE_NAME
             valueFrom:
@@ -64,12 +76,8 @@ metadata:
     k8s-app: echoserver
 spec:
   ingressClassName: nginx
-  tls:
-  - hosts:
-    - test.app
-    secretName: apps-cert
   rules:
-  - host: test.app
+  - host: echo.app.test
     http:
       paths:
       - path: /
